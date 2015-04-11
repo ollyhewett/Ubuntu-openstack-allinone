@@ -151,7 +151,8 @@ wget http://cdn.download.cirros-cloud.net/0.3.3/cirros-0.3.3-x86_64-disk.img
 cd ~
 glance image-create --name "cirros-0.3.3-x86_64" --file /tmp/images/cirros-0.3.3-x86_64-disk.img \
   --disk-format qcow2 --container-format bare --is-public True --progress
-  
+
+###needs work  
 apt-get install -y nova-api nova-cert nova-conductor nova-consoleauth nova-novncproxy nova-scheduler python-novaclient nova-compute nova-console
 
 keystone user-create --name nova --pass password
