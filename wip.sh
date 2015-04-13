@@ -216,12 +216,12 @@ crudini --set /etc/nova/nova.conf database connection mysql://nova:$ADMIN_PWD@$C
 crudini --set /etc/nova/nova.conf DEFAULT rpc_backend rabbit
 crudini --set /etc/nova/nova.conf DEFAULT rabbit_host $CONTROLLER_IP
 crudini --set /etc/nova/nova.conf DEFAULT rabbit_password $ADMIN_PWD
-crudini --set /etc/nova/nova.conf DEFAULT my_ip 192.168.0.71
-crudini --set /etc/nova/nova.conf DEFAULT vncserver_listen 192.168.0.71
-crudini --set /etc/nova/nova.conf DEFAULT vncserver_proxyclient_address 192.168.0.71
+crudini --set /etc/nova/nova.conf DEFAULT my_ip $CONTROLLER_IP
+crudini --set /etc/nova/nova.conf DEFAULT vncserver_listen $CONTROLLER_IP
+crudini --set /etc/nova/nova.conf DEFAULT vncserver_proxyclient_address $CONTROLLER_IP
 crudini --set /etc/nova/nova.conf DEFAULT auth_strategy keystone
 crudini --set /etc/nova/nova.conf DEFAULT verbose True
-crudini --set /etc/nova/nova.conf DEFAULT novncproxy_base_url http://192.168.0.71:6080/vnc_auto.html
+crudini --set /etc/nova/nova.conf DEFAULT novncproxy_base_url http://$CONTROLLER_IP:6080/vnc_auto.html
 crudini --set /etc/nova/nova.conf DEFAULT network_api_class nova.network.neutronv2.api.API
 crudini --set /etc/nova/nova.conf DEFAULT security_group_api neutron
 crudini --set /etc/nova/nova.conf DEFAULT linuxnet_interface_driver nova.network.linux_net.LinuxOVSInterfaceDriver
