@@ -153,16 +153,16 @@ keystone endpoint-create \
   
  apt-get install -y glance
   
-crudini --set /etc/glance/glance-api.conf database connection mysql://glance:$ADMIN_PWD@$CONTROLLER_IP/glance
-crudini --set /etc/glance/glance-api.conf keystone_authtoken auth_uri http://$CONTROLLER_IP:5000/v2.0
-crudini --set /etc/glance/glance-api.conf keystone_authtoken identity_uri http://$CONTROLLER_IP:35357
-crudini --set /etc/glance/glance-api.conf keystone_authtoken admin_tenant_name service
-crudini --set /etc/glance/glance-api.conf keystone_authtoken admin_user  glance
-crudini --set /etc/glance/glance-api.conf keystone_authtoken admin_password  $ADMIN_PWD
-crudini --set /etc/glance/glance-api.conf paste_deploy flavor keystone
-crudini --set /etc/glance/glance-api.conf glance_store default_store file
-crudini --set /etc/glance/glance-api.conf filesystem_store_datadir  /var/lib/glance/images/
-crudini --set /etc/glance/glance-api.conf DEFAULT verbose True
+#crudini --set /etc/glance/glance-api.conf database connection mysql://glance:$ADMIN_PWD@$CONTROLLER_IP/glance
+#crudini --set /etc/glance/glance-api.conf keystone_authtoken auth_uri http://$CONTROLLER_IP:5000/v2.0
+#crudini --set /etc/glance/glance-api.conf keystone_authtoken identity_uri http://$CONTROLLER_IP:35357
+#crudini --set /etc/glance/glance-api.conf keystone_authtoken admin_tenant_name service
+#crudini --set /etc/glance/glance-api.conf keystone_authtoken admin_user  glance
+#crudini --set /etc/glance/glance-api.conf keystone_authtoken admin_password  $ADMIN_PWD
+#crudini --set /etc/glance/glance-api.conf paste_deploy flavor keystone
+#crudini --set /etc/glance/glance-api.conf glance_store default_store file
+#crudini --set /etc/glance/glance-api.conf filesystem_store_datadir  /var/lib/glance/images/
+#crudini --set /etc/glance/glance-api.conf DEFAULT verbose True
 
 crudini --set /etc/glance/glance-registry.conf database connection mysql://glance:$ADMIN_PWD@$CONTROLLER_IP/glance
 crudini --set /etc/glance/glance-registry.conf keystone_authtoken auth_uri http://$CONTROLLER_IP:5000/v2.0
