@@ -8,6 +8,20 @@ SERVICE_PWD=passwordhere
 ADMIN_PWD=passwordhere
 META_PWD=passwordhere
 
+
+echo "auto eth1" >> /etc/network/interfaces
+echo "iface eth1 inet manual" >> /etc/network/interfaces
+echo "        up ip link set dev $IFACE up" >>/etc/network/interfaces
+echo "        down ip link set dev $IFACE down" >>/etc/network/interfaces
+echo " " >> /etc/network/interfaces
+echo "auto eth2" >> /etc/network/interfaces
+echo "iface eth2 inet dhcp" >> /etc/network/interfaces
+
+ifconfig eth1 up
+ifconfig eth2 up
+
+
+
 echo "$(tput setaf 1)STARTING OPENSTACKING INSTALL$(tput sgr0)"
 
 
@@ -47,6 +61,16 @@ echo "$(tput setaf 1)RABBITMQ INSTALLED$(tput sgr0)"
 
 #install db
 echo "$(tput setaf 1)INSTALLING MYSQL$(tput sgr0)"
+
+export MYSQL_ROOT_PASS=$SERVICE_PWD
+export MYSQL_DB_PASS=$SERVICE_PWD
+
+echo "mysql-server-5.5 mysql-server/root_password password $MYSQL_ROOT_PASS" | sudo debconf-set-selections
+echo "mysql-server-5.5 mysql-server/root_password_again password $MYSQL_ROOT_PASS" | sudo debconf-set-selections
+echo "mysql-server-5.5 mysql-server/root_password seen true" | sudo debconf-set-selections
+echo "mysql-server-5.5 mysql-server/root_password_again seen true" | sudo debconf-set-selections
+
+
 apt-get install mariadb-server python-mysqldb -y
 sed -i "s/bind-address.*/bind-address = $CONTROLLER_IP/" /etc/mysql/my.cnf
 sed -i '/skip-external-locking/a character-set-server = utf8' /etc/mysql/my.cnf
@@ -153,16 +177,16 @@ keystone endpoint-create \
   
  apt-get install -y glance
   
-#crudini --set /etc/glance/glance-api.conf database connection mysql://glance:$ADMIN_PWD@$CONTROLLER_IP/glance
-#crudini --set /etc/glance/glance-api.conf keystone_authtoken auth_uri http://$CONTROLLER_IP:5000/v2.0
-#crudini --set /etc/glance/glance-api.conf keystone_authtoken identity_uri http://$CONTROLLER_IP:35357
-#crudini --set /etc/glance/glance-api.conf keystone_authtoken admin_tenant_name service
-#crudini --set /etc/glance/glance-api.conf keystone_authtoken admin_user  glance
-#crudini --set /etc/glance/glance-api.conf keystone_authtoken admin_password  $ADMIN_PWD
-#crudini --set /etc/glance/glance-api.conf paste_deploy flavor keystone
-#crudini --set /etc/glance/glance-api.conf glance_store default_store file
-#crudini --set /etc/glance/glance-api.conf filesystem_store_datadir  /var/lib/glance/images/
-#crudini --set /etc/glance/glance-api.conf DEFAULT verbose True
+crudini --set /etc/glance/glance-api.conf database connection mysql://glance:$ADMIN_PWD@$CONTROLLER_IP/glance
+crudini --set /etc/glance/glance-api.conf keystone_authtoken auth_uri http://$CONTROLLER_IP:5000/v2.0
+crudini --set /etc/glance/glance-api.conf keystone_authtoken identity_uri http://$CONTROLLER_IP:35357
+crudini --set /etc/glance/glance-api.conf keystone_authtoken admin_tenant_name service
+crudini --set /etc/glance/glance-api.conf keystone_authtoken admin_user  glance
+crudini --set /etc/glance/glance-api.conf keystone_authtoken admin_password  $ADMIN_PWD
+crudini --set /etc/glance/glance-api.conf paste_deploy flavor keystone
+crudini --set /etc/glance/glance-api.conf glance_store default_store file
+crudini --set /etc/glance/glance-api.conf filesystem_store_datadir  /var/lib/glance/images/
+crudini --set /etc/glance/glance-api.conf DEFAULT verbose True
 
 crudini --set /etc/glance/glance-registry.conf database connection mysql://glance:$ADMIN_PWD@$CONTROLLER_IP/glance
 crudini --set /etc/glance/glance-registry.conf keystone_authtoken auth_uri http://$CONTROLLER_IP:5000/v2.0
@@ -174,6 +198,12 @@ crudini --set /etc/glance/glance-registry.conf paste_deploy flavor keystone
 crudini --set /etc/glance/glance-registry.conf DEFAULT verbose True
 
 su -s /bin/sh -c "glance-manage db_sync" glance
+
+service glance-registry restart
+service glance-api restart
+
+rm -f /var/lib/glance/glance.sqlite
+
 echo "$(tput setaf 1)CREATED GLANCE USERS AND TENANTS AND CONF$(tput sgr0)"
 
 
