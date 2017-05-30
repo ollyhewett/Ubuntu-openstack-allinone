@@ -1,4 +1,4 @@
-#All-in-one Openstack Juno and Kilo scripts based on Ubuntu 14.04 
+# All-in-one Openstack Juno and Kilo scripts based on Ubuntu 14.04 
 
 Scripts to provide an "all in one" install script for deployment of a single test node running OpenStack Juno & Kilo
 
